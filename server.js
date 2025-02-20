@@ -18,9 +18,10 @@ app.use((req, res, next) => {
 // Configure CORS
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production'
-    ? process.env.CORS_ORIGIN
+    ? ['https://restaurant-order-booking-nu.vercel.app', 'https://restaurant-order-booking-nu.vercel.app/']
     : 'http://localhost:3000',
-  optionsSuccessStatus: 200
+  optionsSuccessStatus: 200,
+  credentials: true
 };
 
 app.use(cors(corsOptions));
