@@ -2,6 +2,12 @@ const express = require('express');
 const router = express.Router();
 const Order = require('../models/Order');
 
+// Debug logging for routes
+router.use((req, res, next) => {
+  console.log('Orders Route:', req.method, req.originalUrl);
+  next();
+});
+
 // Create new order
 router.post('/', async (req, res) => {
   try {

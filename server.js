@@ -19,7 +19,7 @@ app.use((req, res, next) => {
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production'
     ? ['https://restaurant-order-booking-nu.vercel.app', 'https://restaurant-order-booking-nu.vercel.app/']
-    : 'http://localhost:3000',
+    : ['http://localhost:3000', 'http://localhost:5173'],
   optionsSuccessStatus: 200,
   credentials: true
 };
@@ -49,7 +49,7 @@ app.get('/', (req, res) => {
   });
 });
 
-// Routes
+// Routes - restore the /api prefix
 app.use('/api/orders', require('./routes/orders'));
 
 // For local development only
