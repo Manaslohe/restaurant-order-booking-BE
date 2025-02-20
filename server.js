@@ -11,9 +11,44 @@ connectDB();
 
 const app = express();
 
-// Middleware
-app.use(cors());
+// Add request logging
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+  next();
+});
+
+// Configure CORS
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production'
+    ? 'https://restaurant-order-booking-nu.vercel.app'
+    : 'http://localhost:3000',
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    environment: process.env.NODE_ENV,
+    timestamp: new Date(),
+    uptime: process.uptime()
+  });
+});
+
+// Root endpoint
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Restaurant Order Booking API',
+    version: '1.0',
+    endpoints: {
+      health: '/health',
+      api: '/api/orders'
+    }
+  });
+});
 
 // Routes
 app.use('/api/orders', require('./routes/orders'));
