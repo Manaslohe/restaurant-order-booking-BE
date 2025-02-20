@@ -3,13 +3,11 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/db');
 
-// Load env vars
 dotenv.config();
+const app = express();
 
 // Connect to database
 connectDB();
-
-const app = express();
 
 // Add request logging
 app.use((req, res, next) => {
@@ -53,8 +51,13 @@ app.get('/', (req, res) => {
 // Routes
 app.use('/api/orders', require('./routes/orders'));
 
-const PORT = process.env.PORT || 5000;
+// For local development only
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+// Export for Vercel
+module.exports = app;
