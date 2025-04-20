@@ -17,14 +17,34 @@ app.use((req, res, next) => {
 
 // Configure CORS
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production'
-    ? ['https://restaurant-order-booking-nu.vercel.app', 'https://restaurant-order-booking-nu.vercel.app/']
-    : ['http://localhost:3000', 'http://localhost:5173'],
+  origin: function(origin, callback) {
+    // List of allowed origins - include both www and non-www versions
+    const allowedOrigins = [
+      'https://restaurant-order-booking-nu.vercel.app',
+      'https://www.restaurant-order-booking-nu.vercel.app',
+      'http://localhost:3000',
+      'http://localhost:5173'
+    ];
+    
+    // In development, allow requests with no origin (like mobile apps or curl)
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log('CORS blocked origin:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   optionsSuccessStatus: 200,
   credentials: true
 };
 
 app.use(cors(corsOptions));
+
+// For preflight requests
+app.options('*', cors(corsOptions));
+
 app.use(express.json());
 
 // Health check endpoint
