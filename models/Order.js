@@ -47,6 +47,10 @@ const orderSchema = new mongoose.Schema({
     type: String,
     required: function() { return this.type === 'event'; }
   },
+  mobileNumber: {
+    type: String,
+    required: function() { return this.type === 'event'; }
+  },
   guestCount: {
     type: Number,
     required: function() { return this.type === 'event'; },
